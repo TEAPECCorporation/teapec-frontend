@@ -10,6 +10,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: config.app.name,
   description: "Advanced threat detection and response platform",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({

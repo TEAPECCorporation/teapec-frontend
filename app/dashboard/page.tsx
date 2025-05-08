@@ -3,10 +3,12 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth/auth-context"
-import { Button } from "@/components/ui/button"
+import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
+import { Shield, BarChart3, Activity } from "lucide-react"
+import Link from "next/link"
 
 export default function DashboardPage() {
-  const { user, loading, logout } = useAuth()
+  const { user, loading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
@@ -24,33 +26,51 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-primary text-white p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">Sentinel XDR</h1>
-          <Button variant="outline" onClick={logout} className="text-white border-white hover:bg-primary/80">
-            Sign Out
-          </Button>
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold text-primary mb-2">Welcome to your Dashboard</h1>
+          <p className="text-neutral-text-primary">Monitor and manage your security operations with Sentinel XDR</p>
         </div>
-      </header>
-
-      <main className="container mx-auto p-4 mt-8">
-        <h1 className="text-2xl font-bold text-primary mb-4">Welcome to your Dashboard</h1>
-        <p className="text-neutral-text-primary mb-8">
-          This is a placeholder dashboard. Your actual dashboard content will go here.
-        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-lg font-semibold text-primary mb-2">Dashboard Widget {i}</h2>
+          <Link href="/dashboard/threats">
+            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer border border-gray-100">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-primary/10 p-2 rounded-full">
+                  <Shield className="h-6 w-6 text-primary" />
+                </div>
+                <h2 className="text-lg font-semibold text-primary">AI Threat Detection</h2>
+              </div>
               <p className="text-neutral-text-secondary">
-                This is a placeholder widget. Your actual widget content will go here.
+                Real-time monitoring and detection of security threats using AI
               </p>
             </div>
-          ))}
+          </Link>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-primary/10 p-2 rounded-full">
+                <BarChart3 className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="text-lg font-semibold text-primary">Security Analytics</h2>
+            </div>
+            <p className="text-neutral-text-secondary">
+              Comprehensive analytics and insights into your security posture
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="bg-primary/10 p-2 rounded-full">
+                <Activity className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="text-lg font-semibold text-primary">System Health</h2>
+            </div>
+            <p className="text-neutral-text-secondary">Monitor the health and performance of your security systems</p>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </DashboardLayout>
   )
 }
