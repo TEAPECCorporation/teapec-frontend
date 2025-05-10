@@ -107,4 +107,8 @@ export const authService = {
       return null
     }
   },
+
+  onAuthStateChange(callback: (event: string, session: any) => void) {
+    return supabase.auth.onAuthStateChange(callback)
+  }
 }

@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
 import { authService, type User } from "./auth-service"
+import { supabase } from "../supabase/client"
 
 type AuthContextType = {
   user: User | null
@@ -19,19 +20,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
+  // Listen for auth state changes
   useEffect(() => {
-    async function loadUser() {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session) {
+        try {
+          const userData = await authService.getCurrentUser()
+          setUser(userData)
+        } catch (error) {
+          console.error("Failed to get user data:", error)
+          setUser(null)
+        }
+      } else {
+        setUser(null)
+      }
+      setLoading(false)
+    })
+
+    // Initial session check
+    const initializeAuth = async () => {
       try {
-        const user = await authService.getCurrentUser()
-        setUser(user)
+        const { data } = await supabase.auth.getSession()
+        if (data.session) {
+          const userData = await authService.getCurrentUser()
+          setUser(userData)
+        }
       } catch (error) {
-        console.error("Failed to load user:", error)
+        console.error("Failed to initialize auth:", error)
       } finally {
         setLoading(false)
       }
     }
 
-    loadUser()
+    initializeAuth()
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
   async function signUp(name: string, email: string, password: string) {

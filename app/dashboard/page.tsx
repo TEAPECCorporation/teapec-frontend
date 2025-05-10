@@ -2,10 +2,10 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Shield, BarChart3, Activity } from "lucide-react"
 import { useAuth } from "@/lib/auth/auth-context"
 import { DashboardLayout } from "@/components/dashboard/dashboard-layout"
-import { Shield, BarChart3, Activity } from "lucide-react"
-import Link from "next/link"
 
 export default function DashboardPage() {
   const { user, loading } = useAuth()
